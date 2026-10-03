@@ -19,8 +19,6 @@ void UART_transmit(char data)
     while (!(UCSR0A & (1 << UDRE0)));
     UDR0 = data;
 }
-
-
 void UART_transmit_string(const char *str)
 {
     while (*str)
@@ -55,9 +53,7 @@ void Servo_init(void)
 {
     DDRB |= (1 << DDB1);
     TCCR1A = (1 << COM1A1) | (1 << WGM11);
-    TCCR1B = (1 << WGM13) |
-             (1 << WGM12) |
-             (1 << CS11);
+    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11);
     ICR1 = 39999;
     OCR1A = 3000;
 }
@@ -73,16 +69,12 @@ void setup(void)
 }void loop(void)
 {
     int angle = UART_receive_angle();
-
     if (angle >= 0 && angle <= 180)
     {
         Servo_set_angle(angle);
-
         UART_transmit_string("Servo moved to ");
-
         char buffer[5];
         itoa(angle, buffer, 10);
-
         UART_transmit_string(buffer);
         UART_transmit_string(" degrees\r\n");
     }
